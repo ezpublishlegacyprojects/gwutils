@@ -130,6 +130,11 @@ class GWUpdateHiddenType extends eZWorkflowEventType
                     {
                         $nodes = $object->attribute( 'assigned_nodes' );
                         $doUnhide = false;
+
+                        eZContentCacheManager::clearContentCache( $object->attribute('id') );
+                        eZContentCacheManager::generateObjectViewCache( $object->attribute('id') );
+                        eZStaticCache::executeActions();
+
                         foreach ( $nodes as $node )
                         {
                             if ( $currentTime < $publishTimestamp )
