@@ -84,11 +84,19 @@ class GWUpdateHiddenType extends eZWorkflowEventType
         // if a newer object is the current version, abort this workflow.
         $currentVersion = $object->attribute( 'current_version' );
         $version = $object->version( $parameters['version'] );
-        if ( $currentVersion != $version->attribute( 'version' ) )
+
+        if ( !$version )
+        {
+            eZDebugSetting::writeError(
+                'extension-workflow-updatehidden','The version of object with ID ' .
+                $parameters['object_id'] . ' does not exist.',
+                'GWUpdateHiddenType::execute() object is unavailable' );
+            return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
+        }
+        else if ( $currentVersion != $version->attribute( 'version' ) )
         {
             return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
         }
-
 
         $objectAttributes = $version->attribute( 'contentobject_attributes' );
 
