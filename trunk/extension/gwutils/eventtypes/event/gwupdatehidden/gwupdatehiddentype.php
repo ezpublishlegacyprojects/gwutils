@@ -61,8 +61,25 @@ class GWUpdateHiddenType extends eZWorkflowEventType
     */
     function GWUpdateHiddenType()
     {
-        $this->eZWorkflowEventType( self::WORKFLOW_TYPE_STRING,  ezi18n( 'gwupdatehidden/event', "Update hidden field" ) );
+        $this->eZWorkflowEventType( self::WORKFLOW_TYPE_STRING, self::ezpI18n( 'gwupdatehidden/event', "Update hidden field" ) );
         $this->setTriggerTypes( array( 'content' => array( 'publish' => array( 'after' ) ) ) );
+    }
+
+    /*!
+      Override function for translation function, to make the extension backwards compatible.
+    */
+    private static function ezpI18n( $context, $source )
+    {
+        $value = '';
+        if ( method_exists( 'ezpI18n', 'tr' ) )
+        {
+            $value = ezpI18n::tr( $context, $source );
+        }
+        else if ( function_exists( 'ezi18n' ) )
+        {
+            $value = ezi18n( $context, $source );
+        }
+        return $value;
     }
 
     /*!
